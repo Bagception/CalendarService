@@ -1,13 +1,10 @@
 package de.uniulm.bagception.calendar.service;
 
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import android.app.IntentService;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -15,7 +12,6 @@ import android.util.Log;
 public class CalendarService extends IntentService {
 
 	private ResultReceiver resultReceiver;
-	private Cursor cursor;
 
 	public CalendarService() {
 		super("CalendarService");
@@ -37,11 +33,11 @@ public class CalendarService extends IntentService {
 		}
 	
 		CalendarReader reader = new CalendarReader();
-		reader.readCalendarEvent(this, calendarNames, calendarIDs);
-		
+		ArrayList<String> calendarEvents = reader.readCalendarEvent(this, calendarNames, calendarIDs);
 		
 		Bundle b = new Bundle();
-		b.putString("payload", "itworks");
+		
+		b.putStringArrayList("calendarEvents", calendarEvents);
 		resultReceiver.send(0, b);
 		log("sending answer...");
 	}

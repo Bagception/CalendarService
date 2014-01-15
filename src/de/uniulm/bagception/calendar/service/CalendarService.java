@@ -3,6 +3,8 @@ package de.uniulm.bagception.calendar.service;
 
 import java.util.ArrayList;
 
+import de.uniulm.bagception.services.attributes.Calendar;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,22 +28,22 @@ public class CalendarService extends IntentService {
 		log("calendar request received!");
 		
 		
-		if(intent.hasExtra("requestType")){
-			if(intent.getStringExtra("requestType").equals("calendarEvents")){
+		if(intent.hasExtra(Calendar.REQUEST_TYPE)){
+			if(intent.getStringExtra(Calendar.REQUEST_TYPE).equals(Calendar.CALENDAR_EVENTS)){
 				// getting intent extras
-				String[] calendarNames = intent.getStringArrayExtra("calendarNames");
-				int[] calendarIDs = intent.getIntArrayExtra("calendarIDs");
-				int numberOfEvents = intent.getIntExtra("numberOfEvents", -1);
+				String[] calendarNames = intent.getStringArrayExtra(Calendar.CALENDAR_NAMES);
+				int[] calendarIDs = intent.getIntArrayExtra(Calendar.CALENDAR_IDS);
+				int numberOfEvents = intent.getIntExtra(Calendar.NUMBER_OF_EVENTS, -1);
 				
 				// getting and sending calendar events
 				Bundle b = new Bundle();
-				b.putStringArrayList("calendarEvents", reader.readCalendarEvent(this, calendarNames, calendarIDs, numberOfEvents));
+				b.putStringArrayList(Calendar.CALENDAR_EVENTS, reader.readCalendarEvent(this, calendarNames, calendarIDs, numberOfEvents));
 				resultReceiver.send(0, b);
 				log("sending calendar events...");
 			}
-			if(intent.getStringExtra("requestType").equals("calendarNames")){
+			if(intent.getStringExtra(Calendar.REQUEST_TYPE).equals(Calendar.CALENDAR_NAMES)){
 				Bundle b = new Bundle();
-				b.putStringArrayList("calendarNames", reader.getCalendarNames(this));
+				b.putStringArrayList(Calendar.CALENDAR_NAMES, reader.getCalendarNames(this));
 				resultReceiver.send(0, b);
 				log("sending calendar names...");
 			}
